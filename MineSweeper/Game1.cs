@@ -22,6 +22,7 @@ namespace MineSweeper
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            //Adding comment to do init commit.
             ContentManager = Content;
 
             mainBoard = new Board(20, Board.Difficulty.easy, .5f);
