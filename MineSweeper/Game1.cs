@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MineSweeper
 {
@@ -8,7 +10,7 @@ namespace MineSweeper
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        Board mainBoard;
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -28,6 +30,8 @@ namespace MineSweeper
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            mainBoard = new Board(10, Board.Difficulty.easy, Content, 1f, _graphics);
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -37,6 +41,8 @@ namespace MineSweeper
 
             // TODO: Add your update logic here
 
+
+
             base.Update(gameTime);
         }
 
@@ -45,6 +51,14 @@ namespace MineSweeper
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            for (int i = 0; i < mainBoard.size * mainBoard.size; i++)
+            {
+                _spriteBatch.Draw(mainBoard.cells[i].sprite.texture, mainBoard.cells[i].sprite.rect, Color.White);
+            }
+            _spriteBatch.End();
+
+
 
             base.Draw(gameTime);
         }
