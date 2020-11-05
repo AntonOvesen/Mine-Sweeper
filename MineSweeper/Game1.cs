@@ -8,12 +8,13 @@ namespace MineSweeper
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
+        public static GraphicsDeviceManager Graphics;
+        public static ContentManager ContentManager { get; private set; }
         private SpriteBatch _spriteBatch;
         Board mainBoard;
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -21,6 +22,9 @@ namespace MineSweeper
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            ContentManager = Content;
+
+            mainBoard = new Board(10, Board.Difficulty.easy, 1.2f);
 
             base.Initialize();
         }
@@ -30,7 +34,7 @@ namespace MineSweeper
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            mainBoard = new Board(10, Board.Difficulty.easy, Content, 1f, _graphics);
+            
 
         }
 
@@ -41,8 +45,6 @@ namespace MineSweeper
 
             // TODO: Add your update logic here
 
-
-
             base.Update(gameTime);
         }
 
@@ -52,7 +54,7 @@ namespace MineSweeper
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            for (int i = 0; i < mainBoard.size * mainBoard.size; i++)
+            for (int i = 0; i < mainBoard.boardSize * mainBoard.boardSize; i++)
             {
                 _spriteBatch.Draw(mainBoard.cells[i].sprite.texture, mainBoard.cells[i].sprite.rect, Color.White);
             }

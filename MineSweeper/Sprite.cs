@@ -23,7 +23,7 @@ namespace MineSweeper
         {
             get
             {
-                return new Rectangle(position.ToPoint(), new Vector2(texture.Width, texture.Height).ToPoint() * scale.ToPoint());
+                return new Rectangle((int)position.X,(int)position.Y, (int)MathF.Round(texture.Width * scale.X), (int)MathF.Round(texture.Height * scale.Y));
             }
         }
 
