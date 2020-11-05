@@ -55,7 +55,7 @@ namespace MineSweeper
 
         public static GraphicsDeviceManager GDMRef;
 
-        public Board(int size,Difficulty difficulty, ContentManager content, float scale, GraphicsDeviceManager graphicsDeviceManager)
+        public Board(int size, Difficulty difficulty, ContentManager content, float scale, GraphicsDeviceManager graphicsDeviceManager)
         {
             this.size = size;
             //Preload content for smoother gameplay
@@ -91,17 +91,25 @@ namespace MineSweeper
             {
                 Random rand = new Random();
                 int indexToPlant = rand.Next(0, cells.Length);
-                cells[indexToPlant].isBomb = true;
 
-                for (int j = 0; j < 9; j++)
+                if (cells[indexToPlant].isBomb)
+                    continue;
+                else
                 {
-                    int x = (j % 3) - 1;
-                    int y = ((int)MathF.Floor(j / 3) % 3 * size) - size;
-                    int index = x + y;
+                    cells[indexToPlant].isBomb = true;
 
-                    if(index >= 0 && index < cells.Length)
-                        cells[index].amountOfBombsAround++;
+                    for (int j = 0; j < 9; j++)
+                    {
+                        int x = (j % 3) - 1;
+                        int y = ((int)MathF.Floor(j / 3) % 3 * size) - size;
+                        int index = indexToPlant + x + y;
+
+                        if (index >= 0 && index < cells.Length)
+                            cells[index].amountOfBombsAround++;
+                    }
                 }
+
+                
             }
 
             //Give every cell default image.
@@ -109,8 +117,14 @@ namespace MineSweeper
             {
                 Sprite copy = cells[i].sprite;
 
-                copy = new Sprite(baseTexture,new Vector2(scale,scale));
-                
+                //Testing if it works
+                //if (cells[i].isBomb) { copy = new Sprite(bomb, new Vector2(scale, scale)); }
+                //else
+                //{
+                //    copy = new Sprite(numberTextures[cells[i].amountOfBombsAround], new Vector2(scale, scale));
+                //}
+                copy = new Sprite(baseTexture, new Vector2(scale, scale));
+
 
                 int x = i % size * (int)MathF.Round(copy.size.X);
                 int y = ((int)MathF.Floor(i / size) % size) * (int)MathF.Round(copy.size.Y);
@@ -119,21 +133,8 @@ namespace MineSweeper
 
                 cells[i].sprite = copy;
             }
-            
+
         }
-
-        void PressCell()
-        {
-            
-        }
-
-        //Vector2 cellsIndexByMousePos()
-        //{
-        //    MouseState state = Mouse.GetState();
-
-            
-
-        //}
 
     }
 }
