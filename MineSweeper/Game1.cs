@@ -45,9 +45,20 @@ namespace MineSweeper
                 Exit();
 
             // TODO: Add your update logic here
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Space) && mainBoard.isInsideScreenWindow)
+            {
+                mainBoard.cells[mainBoard.CurrentCell].sprite.texture = mainBoard.lC.flag;
+            }
+            
+
+
+
 
             base.Update(gameTime);
         }
+
+        
 
         protected override void Draw(GameTime gameTime)
         {

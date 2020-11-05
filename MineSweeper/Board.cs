@@ -8,14 +8,17 @@ using System.Text;
 
 namespace MineSweeper
 {
+    /// <summary>
+    /// The game board itself
+    /// </summary>
     class Board
     {
         /// <summary>
         /// When board has been initialized. Content is available through the WHOLE damn solution.
         /// </summary>
-        
+
         //Simple class used to hold the loaded content for tidyness
-        LoadedContent lC;
+        public LoadedContent lC;
 
         /// <summary>
         /// The basic data structure used to represent the cells
@@ -36,15 +39,15 @@ namespace MineSweeper
         /// Returns the size of the sides. Play area will always be square.
         /// </summary>
         public int boardSize { get => (int)MathF.Sqrt(cells.Length); }
-        
+
         /// <summary>
         /// Use this to rescale the game window
         /// </summary>
-        public float cellScale 
+        public float CellScale
         {
-            get 
-            { 
-                return _cellScale; 
+            get
+            {
+                return _cellScale;
             }
             set
             {
@@ -52,6 +55,7 @@ namespace MineSweeper
                 UpdateWindowSize();
             }
         }
+        public Point CellSize { get => new Point((int)MathF.Round(lC.baseTexture.Width * CellScale), (int)MathF.Round(lC.baseTexture.Height * CellScale)); }
         private float _cellScale;
 
         /// <summary>
@@ -66,7 +70,7 @@ namespace MineSweeper
 
         public Board(int size, Difficulty difficulty, float scale)
         {
-            
+
 
             //Preload content so it doesnt have to do it during gameplay. Also put in to seperate class for tidyness.
             lC = new LoadedContent();
@@ -119,8 +123,9 @@ namespace MineSweeper
             }
 
             //saves the scale for future use
-            cellScale = scale;
+            CellScale = scale;
         }
+
         /// <summary>
         /// Update window size to fit game
         /// </summary>
@@ -129,7 +134,7 @@ namespace MineSweeper
             for (int i = 0; i < cells.Length; i++)
             {
                 Sprite copy = cells[i].sprite;
-                copy.scale = new Vector2(cellScale, cellScale);
+                copy.scale = new Vector2(CellScale, CellScale);
                 int x = i % boardSize * (int)MathF.Round(copy.size.X);
                 int y = ((int)MathF.Floor(i / boardSize) % boardSize) * (int)MathF.Round(copy.size.Y);
 
@@ -138,9 +143,34 @@ namespace MineSweeper
                 cells[i].sprite = copy;
             }
 
-            Game1.Graphics.PreferredBackBufferWidth = (int)MathF.Round(lC.baseTexture.Width * cellScale) * boardSize;
-            Game1.Graphics.PreferredBackBufferHeight = (int)MathF.Round(lC.baseTexture.Height * cellScale) * boardSize;
+            Game1.Graphics.PreferredBackBufferWidth = (int)MathF.Round(lC.baseTexture.Width * CellScale) * boardSize;
+            Game1.Graphics.PreferredBackBufferHeight = (int)MathF.Round(lC.baseTexture.Height * CellScale) * boardSize;
             Game1.Graphics.ApplyChanges();
+        }
+
+        public bool isInsideScreenWindow 
+        { 
+            get 
+            {
+                MouseState mouse = Mouse.GetState();
+                bool vertical = (mouse.Y < Game1.Graphics.PreferredBackBufferHeight && mouse.Y > 0) ? true : false; 
+                bool horizontal = (mouse.X < Game1.Graphics.PreferredBackBufferWidth && mouse.X > 0) ? true : false;
+                return (vertical && horizontal);
+            } 
+        }
+
+        public int CurrentCell
+        {
+            get
+            {
+                MouseState mouse = Mouse.GetState();
+
+                int x = Math.Clamp(mouse.X, 0, Game1.Graphics.PreferredBackBufferWidth) / CellSize.X;
+
+                int y = (Math.Clamp(mouse.Y, 0, Game1.Graphics.PreferredBackBufferHeight) / CellSize.Y) * boardSize;
+
+                return x + y;
+            }
         }
     }
 
