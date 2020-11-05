@@ -138,8 +138,8 @@ namespace MineSweeper
                 cells[i].sprite = copy;
             }
 
-            Game1.Graphics.PreferredBackBufferWidth = (int)MathF.Round(lC.baseTexture.Width * cellScale * boardSize);
-            Game1.Graphics.PreferredBackBufferHeight = (int)MathF.Round(lC.baseTexture.Height * cellScale * boardSize);
+            Game1.Graphics.PreferredBackBufferWidth = (int)MathF.Round(lC.baseTexture.Width * cellScale) * boardSize;
+            Game1.Graphics.PreferredBackBufferHeight = (int)MathF.Round(lC.baseTexture.Height * cellScale) * boardSize;
             Game1.Graphics.ApplyChanges();
         }
     }

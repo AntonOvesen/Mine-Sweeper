@@ -24,7 +24,7 @@ namespace MineSweeper
             // TODO: Add your initialization logic here
             ContentManager = Content;
 
-            mainBoard = new Board(10, Board.Difficulty.easy, 1.2f);
+            mainBoard = new Board(20, Board.Difficulty.easy, .5f);
 
             base.Initialize();
         }
