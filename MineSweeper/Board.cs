@@ -29,6 +29,7 @@ namespace MineSweeper
             public Sprite sprite;
             public bool isBomb;
             public bool isOpen;
+            public bool isFlag;
         }
         /// <summary>
         /// The playarea
@@ -66,6 +67,23 @@ namespace MineSweeper
             easy = 1,
             medium = 2,
             hard = 3
+        }
+
+
+        public Point indexToPoint(int index)
+        {
+            int x = index % boardSize;
+            int y = (index - x) / boardSize;
+
+            return new Point(x, y);
+        }
+        public int xValueOfIndex(int index) { return indexToPoint(index).X; }
+        public int yValueOfIndex(int index) { return indexToPoint(index).Y; }
+
+        public bool isNeighbourByX(int x1, int x2)
+        {
+            int diff = x1 - x2;
+            return (diff >= -1 && diff <= 1) ? true : false;
         }
 
         public Board(int size, Difficulty difficulty, float scale)
@@ -154,19 +172,20 @@ namespace MineSweeper
         /// <summary>
         /// Returns true if the mouse is inside game window
         /// </summary>
-        public bool isInsideScreenWindow 
-        { 
-            get 
+        public bool isInsideScreenWindow
+        {
+            get
             {
                 MouseState mouse = Mouse.GetState();
 
-                bool vertical = (mouse.Y < Game1.Graphics.PreferredBackBufferHeight && mouse.Y > 0) ? true : false; 
+                bool vertical = (mouse.Y < Game1.Graphics.PreferredBackBufferHeight && mouse.Y > 0) ? true : false;
                 bool horizontal = (mouse.X < Game1.Graphics.PreferredBackBufferWidth && mouse.X > 0) ? true : false;
 
                 return (vertical && horizontal);
-            } 
+            }
         }
 
+        int lastCell;
         /// <summary>
         /// Returns the index for the cell the mouse is hovering over
         /// </summary>
@@ -178,9 +197,64 @@ namespace MineSweeper
 
                 int x = Math.Clamp(mouse.X, 0, Game1.Graphics.PreferredBackBufferWidth) / CellSize.X;
                 int y = (Math.Clamp(mouse.Y, 0, Game1.Graphics.PreferredBackBufferHeight) / CellSize.Y) * boardSize;
-
+                lastCell = x + y;
                 return x + y;
             }
+        }
+
+        public void FlagCell(int index)
+        {
+            if (cells[index].isFlag)
+            {
+                cells[index].isFlag = false;
+                cells[index].sprite.texture = lC.baseTexture;
+            }
+            else
+            {
+                cells[index].isFlag = true;
+                cells[index].sprite.texture = lC.flag;
+            }
+
+        }
+
+        public void PressCell(int index)
+        {
+
+            if (cells[index].isFlag) { return; }
+            if (cells[index].isOpen) { return; }
+
+            if (cells[index].isBomb)
+            {
+                /*TODO: Make loose condition*/
+                return;
+            }
+
+            if (cells[index].amountOfBombsAround == 0)
+            {
+                cells[index].sprite.texture = lC.numberTextures[cells[index].amountOfBombsAround];
+                cells[index].isOpen = true;
+                //TODO: open this and all neighbours and tell them to open their neighbours unless the neighbour in focus has bombs nearby
+                int lastIndex;
+                for (int i = 0; i < 9; i++)
+                {
+                    int x = i % 3 - 1;
+                    int y = (int)(MathF.Floor(i / 3) % 3 * boardSize) - boardSize;
+                    int nextIndex = index + x + y;
+
+                    bool isNeighbour = isNeighbourByX(xValueOfIndex(index), xValueOfIndex(nextIndex));
+
+                    if (isNeighbour && nextIndex >= 0 && nextIndex < cells.Length && !cells[nextIndex].isOpen) 
+                    { PressCell(nextIndex); }
+                    
+                }
+            }
+            else
+            {
+                cells[index].sprite.texture = lC.numberTextures[cells[index].amountOfBombsAround];
+                cells[index].isOpen = true;
+            }
+
+            
         }
     }
 

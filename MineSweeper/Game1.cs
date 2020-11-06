@@ -25,7 +25,7 @@ namespace MineSweeper
             //Adding comment to do init commit.
             ContentManager = Content;
 
-            mainBoard = new Board(20, Board.Difficulty.easy, .5f);
+            mainBoard = new Board(20, Board.Difficulty.medium, 0.75f);
 
             base.Initialize();
         }
@@ -39,22 +39,28 @@ namespace MineSweeper
 
         }
 
+        ButtonState lastLeftClick;
+        ButtonState lastRightClick;
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-            KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Space) && mainBoard.isInsideScreenWindow)
+            ButtonState leftClick = Mouse.GetState().LeftButton;
+            if (leftClick == ButtonState.Pressed && lastLeftClick == ButtonState.Released)
             {
-                mainBoard.cells[mainBoard.CurrentCell].sprite.texture = mainBoard.lC.flag;
+                mainBoard.PressCell(mainBoard.CurrentCell);
             }
-            
+            ButtonState rightClick = Mouse.GetState().RightButton;
+            if (rightClick == ButtonState.Pressed && lastRightClick == ButtonState.Released)
+            {
+                mainBoard.FlagCell(mainBoard.CurrentCell);
+            }
 
 
-
-
+            lastLeftClick = leftClick;
+            lastRightClick = rightClick;
             base.Update(gameTime);
         }
 
