@@ -148,6 +148,9 @@ namespace MineSweeper
             Game1.Graphics.ApplyChanges();
         }
 
+        /// <summary>
+        /// Returns true if the mouse is inside game window
+        /// </summary>
         public bool isInsideScreenWindow 
         { 
             get 
@@ -159,6 +162,9 @@ namespace MineSweeper
             } 
         }
 
+        /// <summary>
+        /// Returns the index for the cell the mouse is hovering over
+        /// </summary>
         public int CurrentCell
         {
             get
