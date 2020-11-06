@@ -134,7 +134,9 @@ namespace MineSweeper
             for (int i = 0; i < cells.Length; i++)
             {
                 Sprite copy = cells[i].sprite;
+
                 copy.scale = new Vector2(CellScale, CellScale);
+
                 int x = i % boardSize * (int)MathF.Round(copy.size.X);
                 int y = ((int)MathF.Floor(i / boardSize) % boardSize) * (int)MathF.Round(copy.size.Y);
 
@@ -145,6 +147,7 @@ namespace MineSweeper
 
             Game1.Graphics.PreferredBackBufferWidth = (int)MathF.Round(lC.baseTexture.Width * CellScale) * boardSize;
             Game1.Graphics.PreferredBackBufferHeight = (int)MathF.Round(lC.baseTexture.Height * CellScale) * boardSize;
+
             Game1.Graphics.ApplyChanges();
         }
 
@@ -156,8 +159,10 @@ namespace MineSweeper
             get 
             {
                 MouseState mouse = Mouse.GetState();
+
                 bool vertical = (mouse.Y < Game1.Graphics.PreferredBackBufferHeight && mouse.Y > 0) ? true : false; 
                 bool horizontal = (mouse.X < Game1.Graphics.PreferredBackBufferWidth && mouse.X > 0) ? true : false;
+
                 return (vertical && horizontal);
             } 
         }
@@ -172,7 +177,6 @@ namespace MineSweeper
                 MouseState mouse = Mouse.GetState();
 
                 int x = Math.Clamp(mouse.X, 0, Game1.Graphics.PreferredBackBufferWidth) / CellSize.X;
-
                 int y = (Math.Clamp(mouse.Y, 0, Game1.Graphics.PreferredBackBufferHeight) / CellSize.Y) * boardSize;
 
                 return x + y;
