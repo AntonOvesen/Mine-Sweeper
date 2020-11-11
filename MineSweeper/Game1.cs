@@ -47,20 +47,25 @@ namespace MineSweeper
                 Exit();
 
             // TODO: Add your update logic here
-            ButtonState leftClick = Mouse.GetState().LeftButton;
-            if (leftClick == ButtonState.Pressed && lastLeftClick == ButtonState.Released)
+            
+            if (mainBoard.isPlay && mainBoard.isInsideScreenWindow)
             {
-                mainBoard.PressCell(mainBoard.CurrentCell);
-            }
-            ButtonState rightClick = Mouse.GetState().RightButton;
-            if (rightClick == ButtonState.Pressed && lastRightClick == ButtonState.Released)
-            {
-                mainBoard.FlagCell(mainBoard.CurrentCell);
-            }
+                ButtonState leftClick = Mouse.GetState().LeftButton;
+                if (leftClick == ButtonState.Pressed && lastLeftClick == ButtonState.Released)
+                {
+                    mainBoard.PressCell(mainBoard.CurrentCell);
+                }
+                ButtonState rightClick = Mouse.GetState().RightButton;
+                if (rightClick == ButtonState.Pressed && lastRightClick == ButtonState.Released)
+                {
+                    mainBoard.FlagCell(mainBoard.CurrentCell);
+                }
 
 
-            lastLeftClick = leftClick;
-            lastRightClick = rightClick;
+                lastLeftClick = leftClick;
+                lastRightClick = rightClick;
+            }
+            
             base.Update(gameTime);
         }
 

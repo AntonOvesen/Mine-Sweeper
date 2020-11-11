@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MineSweeper
 {
@@ -20,6 +21,7 @@ namespace MineSweeper
         //Simple class used to hold the loaded content for tidyness
         public LoadedContent lC;
 
+        public bool isPlay = true;
         /// <summary>
         /// The basic data structure used to represent the cells
         /// </summary>
@@ -119,7 +121,7 @@ namespace MineSweeper
                         int index = indexToPlant + x + y;
 
                         //If the index is for a cell outside play area (doesnt exist) it'll just not do anything
-                        if (index >= 0 && index < cells.Length)
+                        if (isNeighbourByX(xValueOfIndex(index), xValueOfIndex(indexToPlant)) && index >= 0 && index < cells.Length)
                             cells[index].amountOfBombsAround++;
                     }
                 }
@@ -226,6 +228,8 @@ namespace MineSweeper
             if (cells[index].isBomb)
             {
                 /*TODO: Make loose condition*/
+                isPlay = false;
+                cells[index].sprite.texture = lC.bomb;
                 return;
             }
 
@@ -243,9 +247,9 @@ namespace MineSweeper
 
                     bool isNeighbour = isNeighbourByX(xValueOfIndex(index), xValueOfIndex(nextIndex));
 
-                    if (isNeighbour && nextIndex >= 0 && nextIndex < cells.Length && !cells[nextIndex].isOpen) 
+                    if (isNeighbour && nextIndex >= 0 && nextIndex < cells.Length && !cells[nextIndex].isOpen)
                     { PressCell(nextIndex); }
-                    
+
                 }
             }
             else
@@ -254,7 +258,7 @@ namespace MineSweeper
                 cells[index].isOpen = true;
             }
 
-            
+
         }
     }
 
