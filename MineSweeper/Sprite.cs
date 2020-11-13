@@ -15,10 +15,19 @@ namespace MineSweeper
         public Vector2 position;
         public Vector2 scale;
 
-
+        /// <summary>
+        /// Size without scale
+        /// </summary>
         public Vector2 rawSize { get => new Vector2(texture.Width, texture.Height); }
+
+        /// <summary>
+        /// Size with scale
+        /// </summary>
         public Vector2 size { get => new Vector2(texture.Width * scale.X, texture.Height * scale.Y); }
 
+        /// <summary>
+        /// Rectangle with info from position & scale
+        /// </summary>
         public Rectangle rect
         {
             get

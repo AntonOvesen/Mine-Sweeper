@@ -15,13 +15,20 @@ namespace MineSweeper
     class Board
     {
         /// <summary>
-        /// When board has been initialized. Content is available through the WHOLE damn solution.
+        /// Predetermined difficulty levels
         /// </summary>
+        public enum Difficulty
+        {
+            easy = 1,
+            medium = 2,
+            hard = 3
+        }
 
         //Simple class used to hold the loaded content for tidyness
-        public LoadedContent lC;
+        LoadedContent lC;
 
         public bool isPlay = true;
+
         /// <summary>
         /// The basic data structure used to represent the cells
         /// </summary>
@@ -43,6 +50,8 @@ namespace MineSweeper
         /// </summary>
         public int boardSize { get => (int)MathF.Sqrt(cells.Length); }
 
+        #region Motherload of conversion bc 1d array
+
         /// <summary>
         /// Use this to rescale the game window
         /// </summary>
@@ -58,19 +67,8 @@ namespace MineSweeper
                 UpdateWindowSize();
             }
         }
-        public Point CellSize { get => new Point((int)MathF.Round(lC.baseTexture.Width * CellScale), (int)MathF.Round(lC.baseTexture.Height * CellScale)); }
         private float _cellScale;
-
-        /// <summary>
-        /// Predetermined difficulty levels
-        /// </summary>
-        public enum Difficulty
-        {
-            easy = 1,
-            medium = 2,
-            hard = 3
-        }
-
+        public Point CellSize { get => new Point((int)MathF.Round(lC.baseTexture.Width * CellScale), (int)MathF.Round(lC.baseTexture.Height * CellScale)); }
 
         public Point indexToPoint(int index)
         {
@@ -79,14 +77,34 @@ namespace MineSweeper
 
             return new Point(x, y);
         }
+
         public int xValueOfIndex(int index) { return indexToPoint(index).X; }
         public int yValueOfIndex(int index) { return indexToPoint(index).Y; }
+
+        private int _lastCell;
+        /// <summary>
+        /// Returns the index for the cell the mouse is hovering over
+        /// </summary>
+        public int CurrentCell
+        {
+            get
+            {
+                MouseState mouse = Mouse.GetState();
+
+                int x = Math.Clamp(mouse.X, 0, Game1.Graphics.PreferredBackBufferWidth) / CellSize.X;
+                int y = (Math.Clamp(mouse.Y, 0, Game1.Graphics.PreferredBackBufferHeight) / CellSize.Y) * boardSize;
+                _lastCell = x + y;
+                return x + y;
+            }
+        }
 
         public bool isNeighbourByX(int x1, int x2)
         {
             int diff = x1 - x2;
             return (diff >= -1 && diff <= 1) ? true : false;
         }
+
+        #endregion
 
         public Board(int size, Difficulty difficulty, float scale)
         {
@@ -187,23 +205,12 @@ namespace MineSweeper
             }
         }
 
-        int lastCell;
+        
+
         /// <summary>
-        /// Returns the index for the cell the mouse is hovering over
+        /// Plants flag on cell at index position
         /// </summary>
-        public int CurrentCell
-        {
-            get
-            {
-                MouseState mouse = Mouse.GetState();
-
-                int x = Math.Clamp(mouse.X, 0, Game1.Graphics.PreferredBackBufferWidth) / CellSize.X;
-                int y = (Math.Clamp(mouse.Y, 0, Game1.Graphics.PreferredBackBufferHeight) / CellSize.Y) * boardSize;
-                lastCell = x + y;
-                return x + y;
-            }
-        }
-
+        /// <param name="index"></param>
         public void FlagCell(int index)
         {
             if (cells[index].isFlag)
@@ -219,6 +226,10 @@ namespace MineSweeper
 
         }
 
+        /// <summary>
+        /// Press cell at index position
+        /// </summary>
+        /// <param name="index"></param>
         public void PressCell(int index)
         {
 
